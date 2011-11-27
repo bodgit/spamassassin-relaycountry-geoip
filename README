@@ -1,0 +1,22 @@
+An updated SpamAssassin plugin to replace the current RelayCountry plugin.
+
+The main problem with the current RelayCountry plugin is it doesn't support
+IPv6, this is entirely down to the underlying IP::Country module used to do
+the IP -> Country lookups.
+
+The Geo::IP module that uses the Maxmind GeoIP C library and data files has
+both IPv4 and IPv6 data available so it is an ideal choice. The data files
+can just be downloaded from the website which fixes another annoying problem
+with IP::Country; you need to build updated data files yourself and they can
+take a fair chunk of memory.
+
+Enable the plugin with the usual:
+
+loadplugin Mail::SpamAssassin::Plugin::RelayCountry2
+
+Don't enable it at the same time as the original RelayCountry plugin as
+both plugins will try and create the same metadata/headers.
+
+I've replicated the behaviour of IP::Country in that it returns '**' for
+private IPv4 addresses and I've also added similar rules for the standard
+set of private IPv6 addresses as per the relevant RFC.
